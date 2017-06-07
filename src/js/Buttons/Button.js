@@ -538,6 +538,7 @@ class Button extends PureComponent {
         onMouseOver={this._handleMouseOver}
         onMouseLeave={this._handleMouseLeave}
         href={href}
+        ref={(componentRef) => { this._parentRef = componentRef; }}
         className={cn(`md-inline-block md-btn md-btn--${mdBtnType}`, themeClassNames, {
           'md-text': !disabled && !primary && !secondary && !icon && !floating,
           'md-text--disabled': disabled,
@@ -554,7 +555,7 @@ class Button extends PureComponent {
           [`md-btn--snackbar-floating-${snackbarType}adjust`]: snackbar && snackbarType !== null,
         }, className)}
       >
-        {ink}
+        {ink && React.cloneElement(ink, { parentRef: this._parentRef })}
         {tooltip}
         {children}
       </Component>
