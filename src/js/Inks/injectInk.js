@@ -93,6 +93,11 @@ export default ComposedComponent => class InkedComponent extends PureComponent {
      * This is a little _hack_ to get it to work by not using `ref`, but this name.
      */
     __SUPER_SECRET_REF__: PropTypes.func,
+
+    /**
+     * The ref from the parent component necessary for ink events.
+     */
+    parentRef: PropTypes.object,
   };
 
   static defaultProps = {
@@ -198,11 +203,12 @@ export default ComposedComponent => class InkedComponent extends PureComponent {
       inkContainerClassName,
       disabledInteractions,
       waitForInkTransition,
+      parentRef,
       ...props
     } = this.props;
     delete props.__SUPER_SECRET_REF__;
 
-    if (!(props.disabled || inkDisabled)) {
+    if (!(props.disabled || inkDisabled) && parentRef) {
       props.ink = (
         <InkContainer
           ref={this._setInkRef}
@@ -216,6 +222,7 @@ export default ComposedComponent => class InkedComponent extends PureComponent {
           transitionEnterTimeout={transitionEnterTimeout}
           transitionLeaveTimeout={transitionLeaveTimeout}
           waitForInkTransition={waitForInkTransition}
+          parentRef={parentRef}
         />
       );
     }

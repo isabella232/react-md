@@ -276,7 +276,7 @@ export default class ListItem extends PureComponent {
 
   _setContainer(container) {
     if (container) {
-      this._container = findDOMNode(container);
+      this._container = container;
     }
   }
 
@@ -465,6 +465,7 @@ export default class ListItem extends PureComponent {
             'md-list-item--inset': inset && !leftIcon && !leftAvatar,
           }, tileClassName)}
           aria-expanded={nestedList ? isOpen : null}
+          parentRef={this._container}
         >
           {leftNode}
           <ListItemText

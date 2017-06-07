@@ -5,6 +5,7 @@ import cn from 'classnames';
 
 import { ENTER, SPACE } from '../constants/keyCodes';
 import calcPageOffset from '../utils/calcPageOffset';
+import getHostDOMNode from '../utils/getHostDOMNode';
 import isFormPartRole from '../utils/isFormPartRole';
 import isValidClick from '../utils/EventUtils/isValidClick';
 import captureNextEvent from '../utils/EventUtils/captureNextEvent';
@@ -69,11 +70,8 @@ export default class InkContainer extends PureComponent {
   componentWillReceiveProps(nextProps) {
     const { disabledInteractions: di } = this.props;
     const { disabledInteractions: ndi } = nextProps;
-    if (di === ndi) {
-      if (!this.props.parentRef) {
-        return;
-      }
 
+    if (di === ndi) {
       this._initOrRemoveEvents(this.props);
     } else {
       const mouseDisabledDiff = this._isListenerDisabledDiff('mouse', di, ndi);
@@ -88,8 +86,9 @@ export default class InkContainer extends PureComponent {
       clearTimeout(this._removeTimeout);
     }
 
+    const { parentRef } = this.props;
     if (this.props.parentRef) {
-      this._initOrRemoveEvents({ disabledInteractions: ['keyboard', 'mouse', 'touch'] });
+      this._initOrRemoveEvents({ disabledInteractions: ['keyboard', 'mouse', 'touch'], parentRef });
       this._getKeyboardContainer().removeEventListener('blur', this._handleBlur);
     }
   }
@@ -391,9 +390,7 @@ export default class InkContainer extends PureComponent {
   }
 
   _setInkContainer(inkContainer) {
-    if (inkContainer && inkContainer._reactInternalInstance) {
-      this._inkContainer = inkContainer._reactInternalInstance._renderedComponent._hostNode;
-    }
+    this._inkContainer = getHostDOMNode(inkContainer);
   }
 
   render() {

@@ -10,6 +10,7 @@ import Positions from './Positions';
 import TICK from '../constants/CSSTransitionGroupTick';
 import handleWindowClickListeners from '../utils/EventUtils/handleWindowClickListeners';
 import handleKeyboardAccessibility from '../utils/EventUtils/handleKeyboardAccessibility';
+import getHostDOMNode from '../utils/getHostDOMNode';
 import List from '../Lists/List';
 
 /**
@@ -210,7 +211,7 @@ export default class Menu extends PureComponent {
 
   _setList(list) {
     if (list !== null) {
-      this._list = findDOMNode(list);
+      this._list = getHostDOMNode(list);
     }
 
     try {
@@ -225,7 +226,7 @@ export default class Menu extends PureComponent {
 
   _setContainer(container) {
     if (container !== null) {
-      this._container = findDOMNode(container);
+      this._container = container._reactInternalInstance._renderedComponent._renderedComponent._hostNode;
     }
   }
 

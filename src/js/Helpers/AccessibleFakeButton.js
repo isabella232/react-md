@@ -1,8 +1,8 @@
 import React, { PureComponent, Children } from 'react';
 import PropTypes from 'prop-types';
-import { findDOMNode } from 'react-dom';
 import cn from 'classnames';
 import { TAB } from '../constants/keyCodes';
+import getHostDOMNode from '../utils/getHostDOMNode';
 import handleKeyboardAccessibility from '../utils/EventUtils/handleKeyboardAccessibility';
 
 /**
@@ -146,7 +146,13 @@ export default class AccessibleFakeButton extends PureComponent {
 
   _setNode(node) {
     if (node) {
-      this._node = findDOMNode(node);
+      this._parentRef = node;
+
+      if (node._reactInternalInstance) {
+        this._node = getHostDOMNode(node);
+      } else {
+        this._node = node;
+      }
     }
   }
 
@@ -222,8 +228,9 @@ export default class AccessibleFakeButton extends PureComponent {
 
     let childElements = children;
     if (ink) {
+      const inkWithParentRef = React.cloneElement(ink, { parentRef: this._parentRef });
       childElements = Children.toArray(children);
-      childElements.unshift(ink);
+      childElements.unshift(inkWithParentRef);
     }
 
     return (
